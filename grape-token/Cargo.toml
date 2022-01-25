@@ -1,0 +1,8 @@
+[package]
+name = "grape-token"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+grape-span = { path = "../grape-span" }
+grape-symbol = { path = "../grape-symbol" }

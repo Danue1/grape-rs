@@ -1,0 +1,24 @@
+[package]
+name = "grape-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+grape-ast = { path = "./grape-ast" }
+grape-lex = { path = "./grape-lex" }
+grape-parse = { path = "./grape-parse" }
+grape-span = { path = "./grape-span" }
+grape-symbol = { path = "./grape-symbol" }
+grape-token = { path = "./grape-token" }
+grape-validate = { path = "./grape-validate" }
+
+[workspace]
+members = [
+  "grape-ast",
+  "grape-lex",
+  "grape-parse",
+  "grape-span",
+  "grape-symbol",
+  "grape-token",
+  "grape-validate",
+]
