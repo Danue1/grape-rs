@@ -96,7 +96,7 @@ fn with_fields() {
     assert_eq!(
         parse.object_type_definition(),
         Ok(Some(ObjectTypeDefinition {
-            span: Span::new(0, 19),
+            span: Span::new(0, 21),
             description: None,
             name: Name {
                 span: Span::new(5, 8),

@@ -48,7 +48,7 @@ impl<'parse> Parse<'parse> {
         }
     }
 
-    fn union_members(&mut self) -> Result<Vec<Name>, Error> {
+    pub fn union_members(&mut self) -> Result<Vec<Name>, Error> {
         if self.current_token() == &TokenKind::Equal {
             self.bump();
         } else {

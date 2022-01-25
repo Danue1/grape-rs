@@ -278,9 +278,8 @@ impl TypeSystemExtension {
 #[derive(Debug, PartialEq, Clone)]
 pub struct SchemaExtension {
     pub span: Span,
-    pub name: Name,
     pub directives: Vec<Directive>,
-    pub definitions: Vec<(OperationType, Name)>,
+    pub fields: Vec<RootOperationTypeDefinition>,
 }
 
 /// [Spec](https://spec.graphql.org/October2021/#TypeExtension)

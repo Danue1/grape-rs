@@ -1,26 +1,25 @@
 use crate::{Error, Parse};
-use grape_ast::{InterfaceTypeDefinition, StringValue};
-use grape_symbol::INTERFACE;
+use grape_ast::InterfaceTypeExtension;
+use grape_span::Span;
+use grape_symbol::{EXTEND, INTERFACE};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn interface_type_definition(&mut self) -> Result<Option<InterfaceTypeDefinition>, Error> {
-        let description = self.string_value().ok();
+    pub fn interface_type_extension(&mut self) -> Result<Option<InterfaceTypeExtension>, Error> {
+        if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
+            self.bump();
 
-        self.interface_type_definition_with_description(&description)
+            self.interface_type_extension_with_extend(&start_span)
+        } else {
+            Ok(None)
+        }
     }
 
-    pub fn interface_type_definition_with_description(
+    pub fn interface_type_extension_with_extend(
         &mut self,
-        description: &Option<StringValue>,
-    ) -> Result<Option<InterfaceTypeDefinition>, Error> {
-        if let (start_span, TokenKind::Name(INTERFACE)) = self.current() {
-            let start_span = if let Some(description) = description {
-                description.span
-            } else {
-                *start_span
-            };
-
+        start_span: &Span,
+    ) -> Result<Option<InterfaceTypeExtension>, Error> {
+        if self.current_token() == &TokenKind::Name(INTERFACE) {
             self.bump();
 
             let name = self.name()?;
@@ -33,13 +32,13 @@ impl<'parse> Parse<'parse> {
             } else if let Some(interface) = implement_interfaces.last() {
                 (interface.span, vec![])
             } else {
-                (name.span, vec![])
+                return Err(Error::Unexpected);
             };
+
             let span = start_span.with_end(&end_span);
 
-            Ok(Some(InterfaceTypeDefinition {
+            Ok(Some(InterfaceTypeExtension {
                 span,
-                description: description.clone(),
                 name,
                 implement_interfaces,
                 directives,

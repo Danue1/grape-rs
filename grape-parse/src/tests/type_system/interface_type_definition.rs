@@ -96,7 +96,7 @@ fn with_fields() {
     assert_eq!(
         parse.interface_type_definition(),
         Ok(Some(InterfaceTypeDefinition {
-            span: Span::new(0, 24),
+            span: Span::new(0, 26),
             description: None,
             name: Name {
                 span: Span::new(10, 13),

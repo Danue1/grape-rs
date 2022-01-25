@@ -1,5 +1,6 @@
 use crate::{expect, Error, Parse};
 use grape_ast::{InputValueDefinition, StringValue};
+use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
@@ -33,29 +34,33 @@ impl<'parse> Parse<'parse> {
 
     pub fn input_value_definitions_with_brace(
         &mut self,
-    ) -> Result<Vec<InputValueDefinition>, Error> {
-        if self.current_token() == &TokenKind::LeftBrace {
-            self.bump();
-        } else {
-            return Ok(vec![]);
-        };
+    ) -> Result<Option<(Span, Vec<InputValueDefinition>)>, Error> {
+        if let (start_span, TokenKind::LeftBrace) = self.current() {
+            let start_span = *start_span;
 
-        let mut arguments = if let Some(argument) = self.input_value_definition()? {
-            vec![argument]
-        } else {
-            return Err(Error::Unexpected);
-        };
-
-        while let Some(argument) = self.input_value_definition()? {
-            arguments.push(argument);
-        }
-
-        if self.current_token() == &TokenKind::RightBrace {
             self.bump();
 
-            Ok(arguments)
+            let mut arguments = if let Some(argument) = self.input_value_definition()? {
+                vec![argument]
+            } else {
+                return Err(Error::Unexpected);
+            };
+
+            while let Some(argument) = self.input_value_definition()? {
+                arguments.push(argument);
+            }
+
+            if let (end_span, TokenKind::RightBrace) = self.current() {
+                let span = start_span.with_end(end_span);
+
+                self.bump();
+
+                Ok(Some((span, arguments)))
+            } else {
+                Err(Error::Unexpected)
+            }
         } else {
-            Err(Error::Unexpected)
+            Ok(None)
         }
     }
 

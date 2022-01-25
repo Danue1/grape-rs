@@ -1,27 +1,32 @@
 use crate::{expect, Error, Parse};
 use grape_ast::{FieldDefinition, StringValue};
+use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn field_definitions(&mut self) -> Result<Vec<FieldDefinition>, Error> {
-        if self.current_token() == &TokenKind::LeftBrace {
-            self.bump();
-        } else {
-            return Ok(vec![]);
-        }
+    pub fn field_definitions(&mut self) -> Result<Option<(Span, Vec<FieldDefinition>)>, Error> {
+        if let (start_span, TokenKind::LeftBrace) = self.current() {
+            let start_span = *start_span;
 
-        let mut fields = vec![];
-
-        while let Some(field) = self.field_definition()? {
-            fields.push(field);
-        }
-
-        if self.current_token() == &TokenKind::RightBrace {
             self.bump();
 
-            Ok(fields)
+            let mut fields = vec![];
+
+            while let Some(field) = self.field_definition()? {
+                fields.push(field);
+            }
+
+            if let (end_span, TokenKind::RightBrace) = self.current() {
+                let span = start_span.with_end(end_span);
+
+                self.bump();
+
+                Ok(Some((span, fields)))
+            } else {
+                Err(Error::Unexpected)
+            }
         } else {
-            Err(Error::Unexpected)
+            Ok(None)
         }
     }
 

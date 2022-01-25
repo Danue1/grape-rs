@@ -27,15 +27,14 @@ impl<'parse> Parse<'parse> {
 
             let name = self.name()?;
             let directives = self.directives()?;
-            let fields = self.input_value_definitions_with_brace()?;
-
-            let end_span = if let Some(field) = fields.last() {
-                field.span
-            } else if let Some(directive) = directives.last() {
-                directive.span
-            } else {
-                name.span
-            };
+            let (end_span, fields) =
+                if let Some((end_span, fields)) = self.input_value_definitions_with_brace()? {
+                    (end_span, fields)
+                } else if let Some(directive) = directives.last() {
+                    (directive.span, vec![])
+                } else {
+                    (name.span, vec![])
+                };
             let span = start_span.with_end(&end_span);
 
             Ok(Some(InputObjectTypeDefinition {

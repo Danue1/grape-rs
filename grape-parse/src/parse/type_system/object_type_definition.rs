@@ -26,16 +26,14 @@ impl<'parse> Parse<'parse> {
             let name = self.name()?;
             let implement_interfaces = self.implement_interfaces()?;
             let directives = self.directives()?;
-            let fields = self.field_definitions()?;
-
-            let end_span = if let Some(field) = fields.last() {
-                field.span
+            let (end_span, fields) = if let Some((end_span, fields)) = self.field_definitions()? {
+                (end_span, fields)
             } else if let Some(directive) = directives.last() {
-                directive.span
+                (directive.span, vec![])
             } else if let Some(interface) = implement_interfaces.last() {
-                interface.span
+                (interface.span, vec![])
             } else {
-                name.span
+                (name.span, vec![])
             };
             let span = start_span.with_end(&end_span);
 
