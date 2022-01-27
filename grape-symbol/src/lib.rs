@@ -212,6 +212,7 @@ impl_default_for_symbol_interner! {
         pub const INT: Symbol = "Int";
         pub const FLOAT: Symbol = "Float";
         pub const STRING: Symbol = "String";
+        pub const IF: Symbol = "if";
 
         /// [Spec](https://spec.graphql.org/October2021/#BooleanValue)
         pub const TRUE: Symbol = "true";
