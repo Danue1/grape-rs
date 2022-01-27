@@ -199,7 +199,7 @@ fn name_with_arguments() {
                 },
                 arguments: vec![Argument {
                     span: Span::new(6, 15),
-                    name: Name {
+                    key: Name {
                         span: Span::new(6, 9),
                         symbol: interner.intern("bar"),
                     },

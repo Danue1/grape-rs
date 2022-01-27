@@ -15,7 +15,7 @@ fn single() {
             Span::new(0, 10),
             vec![Argument {
                 span: Span::new(1, 9),
-                name: Name {
+                key: Name {
                     span: Span::new(1, 4),
                     symbol: interner.intern("foo"),
                 },
@@ -44,7 +44,7 @@ fn multi() {
             vec![
                 Argument {
                     span: Span::new(1, 9),
-                    name: Name {
+                    key: Name {
                         span: Span::new(1, 4),
                         symbol: interner.intern("foo"),
                     },
@@ -58,7 +58,7 @@ fn multi() {
                 },
                 Argument {
                     span: Span::new(10, 17),
-                    name: Name {
+                    key: Name {
                         span: Span::new(10, 13),
                         symbol: interner.intern("baz"),
                     },

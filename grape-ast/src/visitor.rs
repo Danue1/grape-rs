@@ -339,7 +339,7 @@ pub fn walk_argument<'a, C: Context, V: Visitor<'a, C>>(
     context: &mut C,
     argument: &'a Argument,
 ) {
-    visitor.visit_name(context, &argument.name);
+    visitor.visit_name(context, &argument.key);
     visitor.visit_value(context, &argument.value);
 }
 

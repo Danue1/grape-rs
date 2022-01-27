@@ -38,7 +38,7 @@ fn with_argument() {
             },
             arguments: vec![Argument {
                 span: Span::new(5, 14),
-                name: Name {
+                key: Name {
                     span: Span::new(5, 8),
                     symbol: interner.intern("bar"),
                 },
