@@ -1,8 +1,9 @@
-use crate::{expect, span_by, Error, Lex};
+use crate::{expect, span_by, Lex};
+use grape_diagnostics::{Message, MessageBuilder};
 use grape_token::{Token, TokenKind};
 
 impl<'lex> Lex<'lex> {
-    pub fn numeric(&mut self) -> Result<Token, Error> {
+    pub fn numeric(&mut self) -> Result<Token, Message> {
         let (integer_span, _) = span_by!(self => {
             if matches!(self.cursor.peek(), Some('-')) {
                 self.cursor.next();
@@ -14,7 +15,7 @@ impl<'lex> Lex<'lex> {
                         self.cursor.next();
                     }
                 }
-                _ => return Err(Error::Unexpected),
+                _ => return Err(MessageBuilder::error("unexpected character").build()),
             }
         });
         if !matches!(self.cursor.peek(), Some('.' | 'e' | 'E')) {
@@ -47,7 +48,7 @@ impl<'lex> Lex<'lex> {
         });
 
         if float_span.is_empty() {
-            Err(Error::Unexpected)
+            Err(MessageBuilder::error("unexpected character").build())
         } else {
             let span = integer_span.with_end(&float_span);
             let symbol = self.intern(span);

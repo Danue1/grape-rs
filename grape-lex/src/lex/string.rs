@@ -1,13 +1,14 @@
 use crate::{
-    expect, span_by, unicode_char, Error, Lex, CARRIAGE_RETUNR, HORIZONTAL_TAB, NEW_LINE, SPACE,
+    expect, span_by, unicode_char, Lex, CARRIAGE_RETUNR, HORIZONTAL_TAB, NEW_LINE, SPACE,
     UNICODE_END,
 };
+use grape_diagnostics::{Message, MessageBuilder};
 use grape_span::Span;
 use grape_symbol::EMPTY_STRING;
 use grape_token::{Token, TokenKind};
 
 impl<'lex> Lex<'lex> {
-    pub fn string(&mut self) -> Result<Token, Error> {
+    pub fn string(&mut self) -> Result<Token, Message> {
         let (span, is_block) = span_by!(self => {
             let start = self.cursor.index();
             let _ = expect!(self, '"')?;
@@ -43,7 +44,7 @@ impl<'lex> Lex<'lex> {
                         ) => {
                             self.cursor.next();
                         }
-                        _ => return Err(Error::Unexpected),
+                        _ => return Err(MessageBuilder::error("unexpected character").build()),
                     }
                 }
 
@@ -77,7 +78,7 @@ impl<'lex> Lex<'lex> {
                                 ) => {
                                     self.cursor.next();
                                 }
-                                _ => return Err(Error::Unexpected)
+                                _ => return Err(MessageBuilder::error("unexpected character").build())
                             }
                         }
                         Some(
@@ -88,7 +89,7 @@ impl<'lex> Lex<'lex> {
                         ) => {
                             self.cursor.next();
                         }
-                        _ => return Err(Error::Unexpected)
+                        _ => return Err(MessageBuilder::error("unexpected character").build())
                     }
                 }
 

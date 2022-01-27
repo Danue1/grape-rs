@@ -4,15 +4,16 @@ mod numeric;
 mod string;
 
 use crate::{
-    expect, span_by, Cursor, Error, CARRIAGE_RETUNR, COMMA, HORIZONTAL_TAB, NEW_LINE, SPACE,
-    UNICODE_BOM,
+    expect, span_by, Cursor, CARRIAGE_RETUNR, COMMA, HORIZONTAL_TAB, NEW_LINE, SPACE, UNICODE_BOM,
 };
+use grape_diagnostics::{Diagnostics, Message};
 use grape_span::Span;
 use grape_symbol::{Symbol, SymbolInterner};
 use grape_token::{Token, TokenKind};
 
 #[derive(Debug)]
 pub struct Lex<'lex> {
+    pub diagnostics: Diagnostics<'lex>,
     cursor: Cursor<'lex>,
     interner: SymbolInterner<'lex>,
 }
@@ -20,6 +21,7 @@ pub struct Lex<'lex> {
 impl<'lex> Lex<'lex> {
     pub fn new(source: &'lex str) -> Self {
         let mut lex = Lex {
+            diagnostics: Diagnostics::new(source),
             cursor: Cursor::new(source),
             interner: SymbolInterner::new(),
         };
@@ -45,7 +47,7 @@ impl<'lex> Lex<'lex> {
 }
 
 impl<'lex> Iterator for Lex<'lex> {
-    type Item = Result<Token, Error>;
+    type Item = Result<Token, Message>;
 
     fn next(&mut self) -> Option<Self::Item> {
         macro_rules! punctuator {
