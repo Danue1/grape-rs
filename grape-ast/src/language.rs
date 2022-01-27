@@ -16,6 +16,16 @@ pub enum Selection {
     InlineFragment(InlineFragment),
 }
 
+impl Selection {
+    pub fn directives(&self) -> &[Directive] {
+        match self {
+            Selection::Field(field) => &field.directives,
+            Selection::FragmentSpread(fragment_spread) => &fragment_spread.directives,
+            Selection::InlineFragment(inline_fragment) => &inline_fragment.directives,
+        }
+    }
+}
+
 /// [Spec](https://spec.graphql.org/October2021/#Field)
 #[derive(Debug, PartialEq, Clone)]
 pub struct Field {
@@ -48,7 +58,7 @@ pub struct InlineFragment {
 #[derive(Debug, PartialEq, Clone)]
 pub struct Argument {
     pub span: Span,
-    pub name: Name,
+    pub key: Name,
     pub value: Value,
 }
 

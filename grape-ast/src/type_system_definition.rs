@@ -28,6 +28,10 @@ pub struct SchemaDefinition {
     pub fields: Vec<RootOperationTypeDefinition>,
 }
 
+impl SchemaDefinition {
+    pub const NAME: &'static str = "Schema";
+}
+
 /// [Spec](https://spec.graphql.org/October2021/#RootOperationTypeDefinition)
 #[derive(Debug, PartialEq, Clone)]
 pub struct RootOperationTypeDefinition {
@@ -280,6 +284,10 @@ pub struct SchemaExtension {
     pub span: Span,
     pub directives: Vec<Directive>,
     pub fields: Vec<RootOperationTypeDefinition>,
+}
+
+impl SchemaExtension {
+    pub const NAME: &'static str = "Schema";
 }
 
 /// [Spec](https://spec.graphql.org/October2021/#TypeExtension)
