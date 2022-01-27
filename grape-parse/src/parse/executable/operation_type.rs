@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::OperationType;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{MUTATION, QUERY, SUBSCRIPTION};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn operation_type(&mut self) -> Result<(Span, OperationType), Error> {
+    pub fn operation_type(&mut self) -> Result<(Span, OperationType), Message> {
         match self.current() {
             (span, TokenKind::Name(QUERY)) => {
                 let span = *span;
@@ -28,7 +29,7 @@ impl<'parse> Parse<'parse> {
 
                 Ok((span, OperationType::Subscription))
             }
-            _ => Err(Error::Unexpected),
+            _ => error!(),
         }
     }
 }

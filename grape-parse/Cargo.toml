@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 grape-ast = { path = "../grape-ast" }
+grape-diagnostics = { path = "../grape-diagnostics" }
 grape-lex = { path = "../grape-lex" }
 grape-span = { path = "../grape-span" }
 grape-symbol = { path = "../grape-symbol" }

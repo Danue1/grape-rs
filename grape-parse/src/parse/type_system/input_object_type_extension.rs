@@ -1,5 +1,6 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::InputObjectTypeExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{EXTEND, INPUT};
 use grape_token::TokenKind;
@@ -7,7 +8,7 @@ use grape_token::TokenKind;
 impl<'parse> Parse<'parse> {
     pub fn input_object_type_extension(
         &mut self,
-    ) -> Result<Option<InputObjectTypeExtension>, Error> {
+    ) -> Result<Option<InputObjectTypeExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -20,7 +21,7 @@ impl<'parse> Parse<'parse> {
     pub fn input_object_type_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<InputObjectTypeExtension>, Error> {
+    ) -> Result<Option<InputObjectTypeExtension>, Message> {
         if self.current_token() == &TokenKind::Name(INPUT) {
             self.bump();
 
@@ -32,7 +33,7 @@ impl<'parse> Parse<'parse> {
                 } else if let Some(directive) = directives.last() {
                     (directive.span, vec![])
                 } else {
-                    return Err(Error::Unexpected);
+                    error!();
                 };
             let span = start_span.with_end(&end_span);
 

@@ -1,9 +1,10 @@
-use crate::{expect, Error, Parse};
+use crate::{expect, Parse};
 use grape_ast::VariableDefinition;
+use grape_diagnostics::Message;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn variable_definitions(&mut self) -> Result<Vec<VariableDefinition>, Error> {
+    pub fn variable_definitions(&mut self) -> Result<Vec<VariableDefinition>, Message> {
         if self.current_token() == &TokenKind::LeftParens {
             self.bump();
         } else {
@@ -21,7 +22,7 @@ impl<'parse> Parse<'parse> {
         Ok(variables)
     }
 
-    fn variable_definition(&mut self) -> Result<Option<VariableDefinition>, Error> {
+    fn variable_definition(&mut self) -> Result<Option<VariableDefinition>, Message> {
         let start_span = self.span;
         if self.current_token() == &TokenKind::Dollar {
             self.bump();

@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::SchemaExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{EXTEND, SCHEMA};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn schema_extension(&mut self) -> Result<Option<SchemaExtension>, Error> {
+    pub fn schema_extension(&mut self) -> Result<Option<SchemaExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -18,7 +19,7 @@ impl<'parse> Parse<'parse> {
     pub fn schema_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<SchemaExtension>, Error> {
+    ) -> Result<Option<SchemaExtension>, Message> {
         if self.current_token() == &TokenKind::Name(SCHEMA) {
             self.bump();
 
@@ -37,7 +38,7 @@ impl<'parse> Parse<'parse> {
                     fields: vec![],
                 }))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)

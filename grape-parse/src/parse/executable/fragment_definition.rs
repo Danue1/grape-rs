@@ -1,10 +1,11 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::FragmentDefinition;
+use grape_diagnostics::Message;
 use grape_symbol::{FRAGMENT, ON};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn fragment_definition(&mut self) -> Result<Option<FragmentDefinition>, Error> {
+    pub fn fragment_definition(&mut self) -> Result<Option<FragmentDefinition>, Message> {
         if let (start_span, TokenKind::Name(FRAGMENT)) = self.current() {
             let start_span = *start_span;
 
@@ -25,7 +26,7 @@ impl<'parse> Parse<'parse> {
                     selections,
                 }))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)

@@ -1,9 +1,10 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::{Name, Type, TypeKind};
+use grape_diagnostics::Message;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn ty(&mut self) -> Result<Type, Error> {
+    pub fn ty(&mut self) -> Result<Type, Message> {
         match self.current() {
             (start_span, TokenKind::LeftBracket) => {
                 let start_span = *start_span;
@@ -33,7 +34,7 @@ impl<'parse> Parse<'parse> {
                         Ok(ty)
                     }
                 } else {
-                    Err(Error::Unexpected)
+                    error!()
                 }
             }
             (start_span, TokenKind::Name(symbol)) => {
@@ -63,7 +64,7 @@ impl<'parse> Parse<'parse> {
                     Ok(ty)
                 }
             }
-            _ => Err(Error::Unexpected),
+            _ => error!(),
         }
     }
 }

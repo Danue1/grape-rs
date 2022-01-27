@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::{Field, FragmentSpread, InlineFragment, Name, Selection};
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::ON;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn selections(&mut self) -> Result<Option<(Span, Vec<Selection>)>, Error> {
+    pub fn selections(&mut self) -> Result<Option<(Span, Vec<Selection>)>, Message> {
         if let (start_span, TokenKind::LeftBrace) = self.current() {
             let start_span = *start_span;
 
@@ -24,14 +25,14 @@ impl<'parse> Parse<'parse> {
 
                 Ok(Some((span, selections)))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)
         }
     }
 
-    fn selection(&mut self) -> Result<Option<Selection>, Error> {
+    fn selection(&mut self) -> Result<Option<Selection>, Message> {
         match self.current() {
             (start_span, TokenKind::DotDotDot) => {
                 let start_span = *start_span;
@@ -48,7 +49,7 @@ impl<'parse> Parse<'parse> {
                             if let Some((span, selections)) = self.selections()? {
                                 (span, selections)
                             } else {
-                                return Err(Error::Unexpected);
+                                error!();
                             };
 
                         Ok(Some(Selection::InlineFragment(InlineFragment {
@@ -80,7 +81,7 @@ impl<'parse> Parse<'parse> {
                             directives,
                         })))
                     }
-                    _ => Err(Error::Unexpected),
+                    _ => error!(),
                 }
             }
             (span, TokenKind::Name(symbol)) => {
@@ -105,7 +106,7 @@ impl<'parse> Parse<'parse> {
 
                         (Some(name_or_alias), name)
                     } else {
-                        return Err(Error::Unexpected);
+                        error!();
                     }
                 } else {
                     (None, name_or_alias)

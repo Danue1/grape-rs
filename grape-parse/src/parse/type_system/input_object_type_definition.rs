@@ -1,12 +1,13 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{InputObjectTypeDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_symbol::INPUT;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
     pub fn input_object_type_definition(
         &mut self,
-    ) -> Result<Option<InputObjectTypeDefinition>, Error> {
+    ) -> Result<Option<InputObjectTypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.input_object_type_definition_with_description(&description)
@@ -15,7 +16,7 @@ impl<'parse> Parse<'parse> {
     pub fn input_object_type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<InputObjectTypeDefinition>, Error> {
+    ) -> Result<Option<InputObjectTypeDefinition>, Message> {
         if let (start_span, TokenKind::Name(INPUT)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span

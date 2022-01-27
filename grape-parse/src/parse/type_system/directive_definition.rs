@@ -1,10 +1,11 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::{DirectiveDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_symbol::{DIRECTIVE, ON, REPEATABLE};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn directive_definition(&mut self) -> Result<Option<DirectiveDefinition>, Error> {
+    pub fn directive_definition(&mut self) -> Result<Option<DirectiveDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.directive_definition_with_description(&description)
@@ -13,7 +14,7 @@ impl<'parse> Parse<'parse> {
     pub fn directive_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<DirectiveDefinition>, Error> {
+    ) -> Result<Option<DirectiveDefinition>, Message> {
         if let (start_span, TokenKind::Name(DIRECTIVE)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span
@@ -48,7 +49,7 @@ impl<'parse> Parse<'parse> {
                     locations,
                 }))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)

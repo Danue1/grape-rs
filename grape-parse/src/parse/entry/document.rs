@@ -1,9 +1,10 @@
-use crate::{spanned, Error, Parse};
+use crate::{error, spanned, Parse};
 use grape_ast::{Definition, Document};
+use grape_diagnostics::Message;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn document(&mut self) -> Result<Document, Error> {
+    pub fn document(&mut self) -> Result<Document, Message> {
         let mut definitions = vec![];
         while self.current_token() != &TokenKind::Eof {
             if let Some(definition) = self.operation_definition()? {
@@ -15,7 +16,7 @@ impl<'parse> Parse<'parse> {
             } else if let Some(definition) = self.type_system_extension()? {
                 definitions.push(Definition::Extension(definition));
             } else {
-                return Err(Error::Unexpected);
+                error!();
             }
         }
 

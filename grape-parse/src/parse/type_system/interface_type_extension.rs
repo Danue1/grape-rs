@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::InterfaceTypeExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{EXTEND, INTERFACE};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn interface_type_extension(&mut self) -> Result<Option<InterfaceTypeExtension>, Error> {
+    pub fn interface_type_extension(&mut self) -> Result<Option<InterfaceTypeExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -18,7 +19,7 @@ impl<'parse> Parse<'parse> {
     pub fn interface_type_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<InterfaceTypeExtension>, Error> {
+    ) -> Result<Option<InterfaceTypeExtension>, Message> {
         if self.current_token() == &TokenKind::Name(INTERFACE) {
             self.bump();
 
@@ -32,7 +33,7 @@ impl<'parse> Parse<'parse> {
             } else if let Some(interface) = implement_interfaces.last() {
                 (interface.span, vec![])
             } else {
-                return Err(Error::Unexpected);
+                error!()
             };
 
             let span = start_span.with_end(&end_span);

@@ -1,9 +1,10 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::Directive;
+use grape_diagnostics::Message;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn directives(&mut self) -> Result<Vec<Directive>, Error> {
+    pub fn directives(&mut self) -> Result<Vec<Directive>, Message> {
         let mut variables = vec![];
 
         while let Some(variable) = self.directive()? {
@@ -13,7 +14,7 @@ impl<'parse> Parse<'parse> {
         Ok(variables)
     }
 
-    fn directive(&mut self) -> Result<Option<Directive>, Error> {
+    fn directive(&mut self) -> Result<Option<Directive>, Message> {
         if let (start_span, TokenKind::At) = self.current() {
             let start_span = *start_span;
 

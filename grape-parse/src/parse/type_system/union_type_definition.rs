@@ -1,10 +1,11 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{Name, StringValue, UnionTypeDefinition};
+use grape_diagnostics::Message;
 use grape_symbol::UNION;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn union_type_definition(&mut self) -> Result<Option<UnionTypeDefinition>, Error> {
+    pub fn union_type_definition(&mut self) -> Result<Option<UnionTypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.union_type_definition_with_description(&description)
@@ -13,7 +14,7 @@ impl<'parse> Parse<'parse> {
     pub fn union_type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<UnionTypeDefinition>, Error> {
+    ) -> Result<Option<UnionTypeDefinition>, Message> {
         if let (start_span, TokenKind::Name(UNION)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span
@@ -48,7 +49,7 @@ impl<'parse> Parse<'parse> {
         }
     }
 
-    pub fn union_members(&mut self) -> Result<Vec<Name>, Error> {
+    pub fn union_members(&mut self) -> Result<Vec<Name>, Message> {
         if self.current_token() == &TokenKind::Equal {
             self.bump();
         } else {

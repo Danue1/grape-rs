@@ -1,10 +1,11 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{Name, ObjectTypeDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_symbol::{IMPLEMENTS, TYPE};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn object_type_definition(&mut self) -> Result<Option<ObjectTypeDefinition>, Error> {
+    pub fn object_type_definition(&mut self) -> Result<Option<ObjectTypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.object_type_definition_with_description(&description)
@@ -13,7 +14,7 @@ impl<'parse> Parse<'parse> {
     pub fn object_type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<ObjectTypeDefinition>, Error> {
+    ) -> Result<Option<ObjectTypeDefinition>, Message> {
         if let (start_span, TokenKind::Name(TYPE)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span
@@ -50,7 +51,7 @@ impl<'parse> Parse<'parse> {
         }
     }
 
-    pub(crate) fn implement_interfaces(&mut self) -> Result<Vec<Name>, Error> {
+    pub(crate) fn implement_interfaces(&mut self) -> Result<Vec<Name>, Message> {
         if self.current_token() == &TokenKind::Name(IMPLEMENTS) {
             self.bump();
         } else {

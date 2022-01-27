@@ -1,9 +1,12 @@
-use crate::{spanned, Error, Parse};
+use crate::{error, spanned, Parse};
 use grape_ast::{TypeSystemDefinitionOrExtension, TypeSystemExtensionDocument};
+use grape_diagnostics::Message;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn type_system_extension_document(&mut self) -> Result<TypeSystemExtensionDocument, Error> {
+    pub fn type_system_extension_document(
+        &mut self,
+    ) -> Result<TypeSystemExtensionDocument, Message> {
         let mut definitions = vec![];
         while self.current_token() != &TokenKind::Eof {
             if let Some(definition) = self.type_system_definition()? {
@@ -11,7 +14,7 @@ impl<'parse> Parse<'parse> {
             } else if let Some(definition) = self.type_system_extension()? {
                 definitions.push(TypeSystemDefinitionOrExtension::Extension(definition))
             } else {
-                return Err(Error::Unexpected);
+                error!();
             }
         }
 

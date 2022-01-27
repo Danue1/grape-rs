@@ -1,12 +1,13 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::{InputValueDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
     pub fn input_value_definitions_with_parens(
         &mut self,
-    ) -> Result<Vec<InputValueDefinition>, Error> {
+    ) -> Result<Vec<InputValueDefinition>, Message> {
         if self.current_token() == &TokenKind::LeftParens {
             self.bump();
         } else {
@@ -16,7 +17,7 @@ impl<'parse> Parse<'parse> {
         let mut arguments = if let Some(argument) = self.input_value_definition()? {
             vec![argument]
         } else {
-            return Err(Error::Unexpected);
+            error!();
         };
 
         while let Some(argument) = self.input_value_definition()? {
@@ -28,13 +29,13 @@ impl<'parse> Parse<'parse> {
 
             Ok(arguments)
         } else {
-            Err(Error::Unexpected)
+            error!()
         }
     }
 
     pub fn input_value_definitions_with_brace(
         &mut self,
-    ) -> Result<Option<(Span, Vec<InputValueDefinition>)>, Error> {
+    ) -> Result<Option<(Span, Vec<InputValueDefinition>)>, Message> {
         if let (start_span, TokenKind::LeftBrace) = self.current() {
             let start_span = *start_span;
 
@@ -43,7 +44,7 @@ impl<'parse> Parse<'parse> {
             let mut arguments = if let Some(argument) = self.input_value_definition()? {
                 vec![argument]
             } else {
-                return Err(Error::Unexpected);
+                error!();
             };
 
             while let Some(argument) = self.input_value_definition()? {
@@ -57,14 +58,14 @@ impl<'parse> Parse<'parse> {
 
                 Ok(Some((span, arguments)))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)
         }
     }
 
-    pub fn input_value_definition(&mut self) -> Result<Option<InputValueDefinition>, Error> {
+    pub fn input_value_definition(&mut self) -> Result<Option<InputValueDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.input_value_definition_with_description(&description)
@@ -73,11 +74,11 @@ impl<'parse> Parse<'parse> {
     pub fn input_value_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<InputValueDefinition>, Error> {
+    ) -> Result<Option<InputValueDefinition>, Message> {
         let name = if let Ok(name) = self.name() {
             name
         } else if description.is_some() {
-            return Err(Error::Unexpected);
+            error!();
         } else {
             return Ok(None);
         };

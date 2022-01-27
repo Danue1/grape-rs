@@ -1,13 +1,14 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::{
     BooleanValue, EnumValue, FloatValue, IntValue, ListValue, Name, NullValue, ObjectField,
     ObjectValue, StringValue, Value, Variable,
 };
+use grape_diagnostics::Message;
 use grape_symbol::{FALSE, NULL, TRUE};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn default_value(&mut self) -> Result<Option<Value>, Error> {
+    pub fn default_value(&mut self) -> Result<Option<Value>, Message> {
         if self.current_token() == &TokenKind::Equal {
             self.bump();
             self.value()
@@ -16,7 +17,7 @@ impl<'parse> Parse<'parse> {
         }
     }
 
-    pub fn value(&mut self) -> Result<Option<Value>, Error> {
+    pub fn value(&mut self) -> Result<Option<Value>, Message> {
         match self.current() {
             (span, TokenKind::Name(NULL)) => {
                 let value = Value::Null(NullValue { span: *span });
@@ -91,7 +92,7 @@ impl<'parse> Parse<'parse> {
 
                     Ok(Some(value))
                 } else {
-                    Err(Error::Unexpected)
+                    error!()
                 }
             }
             (start_span, TokenKind::LeftBrace) => {
@@ -110,7 +111,7 @@ impl<'parse> Parse<'parse> {
                             value,
                         });
                     } else {
-                        return Err(Error::Unexpected);
+                        error!();
                     }
                 }
 
@@ -124,7 +125,7 @@ impl<'parse> Parse<'parse> {
 
                     Ok(Some(value))
                 } else {
-                    Err(Error::Unexpected)
+                    error!()
                 }
             }
             (span, TokenKind::Integer(symbol)) => {
@@ -162,7 +163,7 @@ impl<'parse> Parse<'parse> {
         }
     }
 
-    pub fn string_value(&mut self) -> Result<StringValue, Error> {
+    pub fn string_value(&mut self) -> Result<StringValue, Message> {
         if let (span, TokenKind::String(symbol, is_block)) = self.current() {
             let value = StringValue {
                 span: *span,
@@ -174,7 +175,7 @@ impl<'parse> Parse<'parse> {
 
             Ok(value)
         } else {
-            Err(Error::Unexpected)
+            error!()
         }
     }
 }

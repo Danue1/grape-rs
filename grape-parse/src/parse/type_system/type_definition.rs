@@ -1,8 +1,9 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{StringValue, TypeDefinition};
+use grape_diagnostics::Message;
 
 impl<'parse> Parse<'parse> {
-    pub fn type_definition(&mut self) -> Result<Option<TypeDefinition>, Error> {
+    pub fn type_definition(&mut self) -> Result<Option<TypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.type_definition_with_description(&description)
@@ -11,7 +12,7 @@ impl<'parse> Parse<'parse> {
     pub fn type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<TypeDefinition>, Error> {
+    ) -> Result<Option<TypeDefinition>, Message> {
         if let Some(definition) = self.scalar_type_definition_with_description(description)? {
             Ok(Some(TypeDefinition::Scalar(definition)))
         } else if let Some(definition) =

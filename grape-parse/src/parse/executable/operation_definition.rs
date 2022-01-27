@@ -1,8 +1,9 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::{OperationDefinition, OperationType};
+use grape_diagnostics::Message;
 
 impl<'parse> Parse<'parse> {
-    pub fn operation_definition(&mut self) -> Result<Option<OperationDefinition>, Error> {
+    pub fn operation_definition(&mut self) -> Result<Option<OperationDefinition>, Message> {
         let start_span = self.span;
         if let Ok((_, operation_type)) = self.operation_type() {
             let name = self.name().ok();
@@ -19,7 +20,7 @@ impl<'parse> Parse<'parse> {
                     selections,
                 }))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else if let Some((span, selections)) = self.selections()? {
             Ok(Some(OperationDefinition {

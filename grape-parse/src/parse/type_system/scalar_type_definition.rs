@@ -1,10 +1,11 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{ScalarTypeDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_symbol::SCALAR;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn scalar_type_definition(&mut self) -> Result<Option<ScalarTypeDefinition>, Error> {
+    pub fn scalar_type_definition(&mut self) -> Result<Option<ScalarTypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.scalar_type_definition_with_description(&description)
@@ -13,7 +14,7 @@ impl<'parse> Parse<'parse> {
     pub fn scalar_type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<ScalarTypeDefinition>, Error> {
+    ) -> Result<Option<ScalarTypeDefinition>, Message> {
         if let (start_span, TokenKind::Name(SCALAR)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span

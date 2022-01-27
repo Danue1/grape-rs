@@ -1,13 +1,14 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::{
     DirectiveLocation, ExecutableDirectiveLocation, ExecutableDirectiveLocationKind,
     TypeSystemDirectiveLocation, TypeSystemDirectiveLocationKind,
 };
+use grape_diagnostics::Message;
 use grape_symbol::{executable, type_system};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn directive_locations(&mut self) -> Result<Vec<DirectiveLocation>, Error> {
+    pub fn directive_locations(&mut self) -> Result<Vec<DirectiveLocation>, Message> {
         if self.current_token() == &TokenKind::Pipe {
             self.bump();
         }
@@ -23,7 +24,7 @@ impl<'parse> Parse<'parse> {
         Ok(locations)
     }
 
-    pub fn directive_location(&mut self) -> Result<DirectiveLocation, Error> {
+    pub fn directive_location(&mut self) -> Result<DirectiveLocation, Message> {
         macro_rules! match_location {
             (
                 executable: {
@@ -58,7 +59,7 @@ impl<'parse> Parse<'parse> {
                             Ok(DirectiveLocation::TypeSystem(location))
                         }
                     )+
-                    _ => Err(Error::Unexpected)
+                    _ => error!()
                 }
             };
         }

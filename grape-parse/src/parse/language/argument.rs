@@ -1,10 +1,11 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::Argument;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn arguments(&mut self) -> Result<Option<(Span, Vec<Argument>)>, Error> {
+    pub fn arguments(&mut self) -> Result<Option<(Span, Vec<Argument>)>, Message> {
         match self.current() {
             (start_span, TokenKind::LeftParens) => {
                 let start_span = *start_span;
@@ -25,14 +26,14 @@ impl<'parse> Parse<'parse> {
 
                         Ok(Some((span, arguments)))
                     }
-                    _ => Err(Error::Unexpected),
+                    _ => error!(),
                 }
             }
             _ => Ok(None),
         }
     }
 
-    fn argument(&mut self) -> Result<Option<Argument>, Error> {
+    fn argument(&mut self) -> Result<Option<Argument>, Message> {
         let name = match self.name() {
             Ok(name) => name,
             Err(_) => return Ok(None),
@@ -43,11 +44,11 @@ impl<'parse> Parse<'parse> {
         if let Some(value) = self.value()? {
             Ok(Some(Argument {
                 span: name.span.with_end(&value.span()),
-                name,
+                key: name,
                 value,
             }))
         } else {
-            Err(Error::Unexpected)
+            error!()
         }
     }
 }

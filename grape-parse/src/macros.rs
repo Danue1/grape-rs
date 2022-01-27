@@ -5,7 +5,7 @@ macro_rules! expect {
             $pat $(| $tail_pat)* => {
                 $self.bump();
             },
-            _ => return Err(Error::Unexpected)
+            _ => $crate::error!()
         }
     };
 }
@@ -20,5 +20,12 @@ macro_rules! spanned {
         } else {
             grape_span::DUMMY_SPAN
         }
+    };
+}
+
+#[macro_export]
+macro_rules! error {
+    () => {
+        return Err(grape_diagnostics::MessageBuilder::error("unexpected token!").build())
     };
 }

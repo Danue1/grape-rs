@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::TypeExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::EXTEND;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn type_extension(&mut self) -> Result<Option<TypeExtension>, Error> {
+    pub fn type_extension(&mut self) -> Result<Option<TypeExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -18,7 +19,7 @@ impl<'parse> Parse<'parse> {
     pub fn type_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<TypeExtension>, Error> {
+    ) -> Result<Option<TypeExtension>, Message> {
         if let Some(extension) = self.scalar_type_extension_with_extend(start_span)? {
             Ok(Some(TypeExtension::Scalar(extension)))
         } else if let Some(extension) = self.object_type_extension_with_extend(start_span)? {

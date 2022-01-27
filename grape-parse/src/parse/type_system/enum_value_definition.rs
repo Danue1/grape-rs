@@ -1,12 +1,13 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::EnumValueDefinition;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
     pub fn enum_value_definitions(
         &mut self,
-    ) -> Result<Option<(Span, Vec<EnumValueDefinition>)>, Error> {
+    ) -> Result<Option<(Span, Vec<EnumValueDefinition>)>, Message> {
         let start_span = if let (start_span, TokenKind::LeftBrace) = self.current() {
             let start_span = *start_span;
 
@@ -24,7 +25,7 @@ impl<'parse> Parse<'parse> {
         }
 
         if values.is_empty() {
-            return Err(Error::Unexpected);
+            error!();
         }
 
         if let (end_span, TokenKind::RightBrace) = self.current() {
@@ -34,11 +35,11 @@ impl<'parse> Parse<'parse> {
 
             Ok(Some((span, values)))
         } else {
-            Err(Error::Unexpected)
+            error!()
         }
     }
 
-    pub fn enum_value_definition(&mut self) -> Result<Option<EnumValueDefinition>, Error> {
+    pub fn enum_value_definition(&mut self) -> Result<Option<EnumValueDefinition>, Message> {
         let description = self.string_value().ok();
 
         if let Ok(name) = self.name() {
@@ -62,7 +63,7 @@ impl<'parse> Parse<'parse> {
                 directives,
             }))
         } else if description.is_some() {
-            Err(Error::Unexpected)
+            error!()
         } else {
             Ok(None)
         }

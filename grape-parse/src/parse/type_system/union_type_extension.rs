@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::UnionTypeExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{EXTEND, UNION};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn union_type_extension(&mut self) -> Result<Option<UnionTypeExtension>, Error> {
+    pub fn union_type_extension(&mut self) -> Result<Option<UnionTypeExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -18,7 +19,7 @@ impl<'parse> Parse<'parse> {
     pub fn union_type_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<UnionTypeExtension>, Error> {
+    ) -> Result<Option<UnionTypeExtension>, Message> {
         if self.current_token() == &TokenKind::Name(UNION) {
             self.bump();
 
@@ -31,7 +32,7 @@ impl<'parse> Parse<'parse> {
             } else if let Some(directive) = directives.last() {
                 directive.span
             } else {
-                return Err(Error::Unexpected);
+                error!();
             };
             let span = start_span.with_end(&end_span);
 

@@ -1,10 +1,13 @@
-use crate::{Error, Parse};
+use crate::Parse;
 use grape_ast::{InterfaceTypeDefinition, StringValue};
+use grape_diagnostics::Message;
 use grape_symbol::INTERFACE;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn interface_type_definition(&mut self) -> Result<Option<InterfaceTypeDefinition>, Error> {
+    pub fn interface_type_definition(
+        &mut self,
+    ) -> Result<Option<InterfaceTypeDefinition>, Message> {
         let description = self.string_value().ok();
 
         self.interface_type_definition_with_description(&description)
@@ -13,7 +16,7 @@ impl<'parse> Parse<'parse> {
     pub fn interface_type_definition_with_description(
         &mut self,
         description: &Option<StringValue>,
-    ) -> Result<Option<InterfaceTypeDefinition>, Error> {
+    ) -> Result<Option<InterfaceTypeDefinition>, Message> {
         if let (start_span, TokenKind::Name(INTERFACE)) = self.current() {
             let start_span = if let Some(description) = description {
                 description.span

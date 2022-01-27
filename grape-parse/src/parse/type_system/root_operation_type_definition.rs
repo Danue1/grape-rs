@@ -1,12 +1,13 @@
-use crate::{expect, Error, Parse};
+use crate::{error, expect, Parse};
 use grape_ast::RootOperationTypeDefinition;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
     pub fn root_operation_type_definitions(
         &mut self,
-    ) -> Result<Option<(Span, Vec<RootOperationTypeDefinition>)>, Error> {
+    ) -> Result<Option<(Span, Vec<RootOperationTypeDefinition>)>, Message> {
         if let (start_span, TokenKind::LeftBrace) = self.current() {
             let start_span = *start_span;
 
@@ -26,10 +27,10 @@ impl<'parse> Parse<'parse> {
 
                     Ok(Some((span, fields)))
                 } else {
-                    Err(Error::Unexpected)
+                    error!()
                 }
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)
@@ -38,7 +39,7 @@ impl<'parse> Parse<'parse> {
 
     fn root_operation_type_definition(
         &mut self,
-    ) -> Result<Option<RootOperationTypeDefinition>, Error> {
+    ) -> Result<Option<RootOperationTypeDefinition>, Message> {
         if let Ok((start_span, key)) = self.operation_type() {
             expect!(self, TokenKind::Colon);
 

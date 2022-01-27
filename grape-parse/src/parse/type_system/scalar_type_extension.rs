@@ -1,11 +1,12 @@
-use crate::{Error, Parse};
+use crate::{error, Parse};
 use grape_ast::ScalarTypeExtension;
+use grape_diagnostics::Message;
 use grape_span::Span;
 use grape_symbol::{EXTEND, SCALAR};
 use grape_token::TokenKind;
 
 impl<'parse> Parse<'parse> {
-    pub fn scalar_type_extension(&mut self) -> Result<Option<ScalarTypeExtension>, Error> {
+    pub fn scalar_type_extension(&mut self) -> Result<Option<ScalarTypeExtension>, Message> {
         if let (&start_span, TokenKind::Name(EXTEND)) = self.current() {
             self.bump();
 
@@ -18,7 +19,7 @@ impl<'parse> Parse<'parse> {
     pub fn scalar_type_extension_with_extend(
         &mut self,
         start_span: &Span,
-    ) -> Result<Option<ScalarTypeExtension>, Error> {
+    ) -> Result<Option<ScalarTypeExtension>, Message> {
         if self.current_token() == &TokenKind::Name(SCALAR) {
             self.bump();
 
@@ -34,7 +35,7 @@ impl<'parse> Parse<'parse> {
                     directives,
                 }))
             } else {
-                Err(Error::Unexpected)
+                error!()
             }
         } else {
             Ok(None)
