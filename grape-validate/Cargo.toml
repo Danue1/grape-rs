@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+grape-ast = { path = "../grape-ast" }
+grape-diagnostics = { path = "../grape-diagnostics" }
+grape-parse = { path = "../grape-parse" }
+grape-span = { path = "../grape-span" }
+grape-symbol = { path = "../grape-symbol" }
