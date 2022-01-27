@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 grape-ast = { path = "./grape-ast" }
+grape-diagnostics = { path = "./grape-diagnostics" }
 grape-lex = { path = "./grape-lex" }
 grape-parse = { path = "./grape-parse" }
 grape-span = { path = "./grape-span" }
@@ -15,6 +16,7 @@ grape-validate = { path = "./grape-validate" }
 [workspace]
 members = [
   "grape-ast",
+  "grape-diagnostics",
   "grape-lex",
   "grape-parse",
   "grape-span",

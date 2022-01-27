@@ -1,6 +1,7 @@
 #![warn(clippy::all)]
 
 pub use grape_ast::*;
+pub use grape_diagnostics::*;
 pub use grape_lex::*;
 pub use grape_parse::*;
 pub use grape_span::*;
