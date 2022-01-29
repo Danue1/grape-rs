@@ -13,7 +13,7 @@ fn sugar() {
         parse.operation_definition(),
         Ok(Some(OperationDefinition {
             span: Span::new(0, 7),
-            operation_type: OperationType::Query,
+            operation: OperationType::Query,
             name: None,
             variables: vec![],
             directives: vec![],
@@ -42,7 +42,7 @@ fn query() {
         parse.operation_definition(),
         Ok(Some(OperationDefinition {
             span: Span::new(0, 13),
-            operation_type: OperationType::Query,
+            operation: OperationType::Query,
             name: None,
             variables: vec![],
             directives: vec![],
@@ -71,7 +71,7 @@ fn mutation() {
         parse.operation_definition(),
         Ok(Some(OperationDefinition {
             span: Span::new(0, 16),
-            operation_type: OperationType::Mutation,
+            operation: OperationType::Mutation,
             name: None,
             variables: vec![],
             directives: vec![],
@@ -100,7 +100,7 @@ fn subscription() {
         parse.operation_definition(),
         Ok(Some(OperationDefinition {
             span: Span::new(0, 20),
-            operation_type: OperationType::Subscription,
+            operation: OperationType::Subscription,
             name: None,
             variables: vec![],
             directives: vec![],

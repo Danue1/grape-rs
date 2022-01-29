@@ -5,7 +5,7 @@ use grape_span::Span;
 #[derive(Debug, PartialEq, Clone)]
 pub struct OperationDefinition {
     pub span: Span,
-    pub operation_type: OperationType,
+    pub operation: OperationType,
     pub name: Option<Name>,
     pub variables: Vec<VariableDefinition>,
     pub directives: Vec<Directive>,
