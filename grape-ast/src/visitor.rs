@@ -15,253 +15,252 @@ use crate::{
 };
 use grape_diagnostics::Message;
 use grape_span::Span;
+use grape_symbol::Symbol;
 
 pub trait Context {
-    fn span(&self, span: &Span) -> &str;
-    fn report(&mut self, message: Message);
+    fn span(&self, span: Span) -> &str;
+    fn report(&self, message: Message);
+    fn fragment(&self, symbol: Symbol) -> Option<&FragmentDefinition>;
+    fn variable(&self, symbol: Symbol) -> Option<&Value>;
 }
 
 #[allow(unused_variables)]
 pub trait Visitor<'ast, C: Context>: Sized {
-    fn visit_argument(&mut self, context: &mut C, argument: &'ast Argument) {
+    fn visit_argument(&mut self, context: &C, argument: &'ast Argument) {
         walk_argument(self, context, argument);
     }
-    fn visit_boolean_value(&mut self, context: &mut C, boolean_value: &'ast BooleanValue) {
+    fn visit_boolean_value(&mut self, context: &C, boolean_value: &'ast BooleanValue) {
         //
     }
-    fn visit_definition(&mut self, context: &mut C, definition: &'ast Definition) {
+    fn visit_definition(&mut self, context: &C, definition: &'ast Definition) {
         walk_definition(self, context, definition);
     }
-    fn visit_directive(&mut self, context: &mut C, directive: &'ast Directive) {
+    fn visit_directive(&mut self, context: &C, directive: &'ast Directive) {
         walk_directive(self, context, directive);
     }
     fn visit_directive_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         directive_definition: &'ast DirectiveDefinition,
     ) {
         walk_directive_definition(self, context, directive_definition);
     }
     fn visit_directive_location(
         &mut self,
-        context: &mut C,
+        context: &C,
         directive_location: &'ast DirectiveLocation,
     ) {
         walk_directive_location(self, context, directive_location);
     }
-    fn visit_document(&mut self, context: &mut C, document: &'ast Document) {
+    fn visit_document(&mut self, context: &C, document: &'ast Document) {
         walk_document(self, context, document);
     }
     fn visit_enum_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         enum_type_definition: &'ast EnumTypeDefinition,
     ) {
         walk_enum_type_definition(self, context, enum_type_definition);
     }
     fn visit_enum_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         enum_type_extension: &'ast EnumTypeExtension,
     ) {
         walk_enum_type_extension(self, context, enum_type_extension);
     }
-    fn visit_enum_value(&mut self, context: &mut C, enum_value: &'ast EnumValue) {
+    fn visit_enum_value(&mut self, context: &C, enum_value: &'ast EnumValue) {
         walk_enum_value(self, context, enum_value);
     }
     fn visit_enum_value_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         enum_value_definition: &'ast EnumValueDefinition,
     ) {
         walk_enum_value_definition(self, context, enum_value_definition);
     }
     fn visit_executable_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         executable_definition: &'ast ExecutableDefinition,
     ) {
         walk_executable_definition(self, context, executable_definition);
     }
     fn visit_executable_directive_location(
         &mut self,
-        context: &mut C,
+        context: &C,
         executable_directive_location: &'ast ExecutableDirectiveLocation,
     ) {
         walk_executable_directive_location(self, context, executable_directive_location);
     }
     fn visit_executable_directive_location_kind(
         &mut self,
-        context: &mut C,
+        context: &C,
         executable_directive_location_kind: &'ast ExecutableDirectiveLocationKind,
     ) {
         //
     }
     fn visit_executable_document(
         &mut self,
-        context: &mut C,
+        context: &C,
         executable_document: &'ast ExecutableDocument,
     ) {
         walk_executable_document(self, context, executable_document);
     }
-    fn visit_field(&mut self, context: &mut C, field: &'ast Field) {
+    fn visit_field(&mut self, context: &C, field: &'ast Field) {
         walk_field(self, context, field);
     }
-    fn visit_field_definition(&mut self, context: &mut C, field_definition: &'ast FieldDefinition) {
+    fn visit_field_definition(&mut self, context: &C, field_definition: &'ast FieldDefinition) {
         walk_field_definition(self, context, field_definition);
     }
-    fn visit_float_value(&mut self, context: &mut C, float_value: &'ast FloatValue) {
+    fn visit_float_value(&mut self, context: &C, float_value: &'ast FloatValue) {
         //
     }
     fn visit_fragment_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         fragment_definition: &'ast FragmentDefinition,
     ) {
         walk_fragment_definition(self, context, fragment_definition);
     }
-    fn visit_fragment_spread(&mut self, context: &mut C, fragment_spread: &'ast FragmentSpread) {
+    fn visit_fragment_spread(&mut self, context: &C, fragment_spread: &'ast FragmentSpread) {
         walk_fragment_spread(self, context, fragment_spread);
     }
-    fn visit_inline_fragment(&mut self, context: &mut C, inline_fragment: &'ast InlineFragment) {
+    fn visit_inline_fragment(&mut self, context: &C, inline_fragment: &'ast InlineFragment) {
         walk_inline_fragment(self, context, inline_fragment);
     }
     fn visit_input_object_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         input_object_type_definition: &'ast InputObjectTypeDefinition,
     ) {
         walk_input_object_type_definition(self, context, input_object_type_definition);
     }
     fn visit_input_object_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         input_object_type_extension: &'ast InputObjectTypeExtension,
     ) {
         walk_input_object_type_extension(self, context, input_object_type_extension);
     }
     fn visit_input_value_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         input_value_definition: &'ast InputValueDefinition,
     ) {
         walk_input_value_definition(self, context, input_value_definition);
     }
-    fn visit_int_value(&mut self, context: &mut C, int_value: &'ast IntValue) {
+    fn visit_int_value(&mut self, context: &C, int_value: &'ast IntValue) {
         //
     }
     fn visit_interface_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         interface_type_definition: &'ast InterfaceTypeDefinition,
     ) {
         walk_interface_type_definition(self, context, interface_type_definition);
     }
     fn visit_interface_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         interface_type_extension: &'ast InterfaceTypeExtension,
     ) {
         walk_interface_type_extension(self, context, interface_type_extension);
     }
-    fn visit_list_value(&mut self, context: &mut C, list_value: &'ast ListValue) {
+    fn visit_list_value(&mut self, context: &C, list_value: &'ast ListValue) {
         walk_list_value(self, context, list_value);
     }
-    fn visit_name(&mut self, context: &mut C, name: &'ast Name) {
+    fn visit_name(&mut self, context: &C, name: &'ast Name) {
         //
     }
-    fn visit_null_value(&mut self, context: &mut C, null_value: &'ast NullValue) {
+    fn visit_null_value(&mut self, context: &C, null_value: &'ast NullValue) {
         //
     }
-    fn visit_object_field(&mut self, context: &mut C, object_field: &'ast ObjectField) {
+    fn visit_object_field(&mut self, context: &C, object_field: &'ast ObjectField) {
         walk_object_field(self, context, object_field);
     }
     fn visit_object_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         object_type_definition: &'ast ObjectTypeDefinition,
     ) {
         walk_object_type_definition(self, context, object_type_definition);
     }
     fn visit_object_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         object_type_extension: &'ast ObjectTypeExtension,
     ) {
         walk_object_type_extension(self, context, object_type_extension);
     }
-    fn visit_object_value(&mut self, context: &mut C, object_value: &'ast ObjectValue) {
+    fn visit_object_value(&mut self, context: &C, object_value: &'ast ObjectValue) {
         walk_object_value(self, context, object_value);
     }
     fn visit_operation_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         operation_definition: &'ast OperationDefinition,
     ) {
         walk_operation_definition(self, context, operation_definition);
     }
-    fn visit_operation_type(&mut self, context: &mut C, operation_type: &'ast OperationType) {
+    fn visit_operation_type(&mut self, context: &C, operation_type: &'ast OperationType) {
         //
     }
     fn visit_root_operation_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         root_operation_type_definition: &'ast RootOperationTypeDefinition,
     ) {
         walk_root_operation_type_definition(self, context, root_operation_type_definition);
     }
     fn visit_scalar_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         scalar_type_definition: &'ast ScalarTypeDefinition,
     ) {
         walk_scalar_type_definition(self, context, scalar_type_definition);
     }
     fn visit_scalar_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         scalar_type_extension: &'ast ScalarTypeExtension,
     ) {
         walk_scalar_type_extension(self, context, scalar_type_extension);
     }
-    fn visit_schema_definition(
-        &mut self,
-        context: &mut C,
-        schema_definition: &'ast SchemaDefinition,
-    ) {
+    fn visit_schema_definition(&mut self, context: &C, schema_definition: &'ast SchemaDefinition) {
         walk_schema_definition(self, context, schema_definition);
     }
-    fn visit_schema_extension(&mut self, context: &mut C, schema_extension: &'ast SchemaExtension) {
+    fn visit_schema_extension(&mut self, context: &C, schema_extension: &'ast SchemaExtension) {
         walk_schema_extension(self, context, schema_extension);
     }
-    fn visit_selection(&mut self, context: &mut C, selection: &'ast Selection) {
+    fn visit_selection(&mut self, context: &C, selection: &'ast Selection) {
         walk_selection(self, context, selection);
     }
-    fn visit_string_value(&mut self, context: &mut C, string_value: &'ast StringValue) {
+    fn visit_string_value(&mut self, context: &C, string_value: &'ast StringValue) {
         //
     }
-    fn visit_ty(&mut self, context: &mut C, ty: &'ast Type) {
+    fn visit_ty(&mut self, context: &C, ty: &'ast Type) {
         walk_ty(self, context, ty);
     }
-    fn visit_type_definition(&mut self, context: &mut C, type_definition: &'ast TypeDefinition) {
+    fn visit_type_definition(&mut self, context: &C, type_definition: &'ast TypeDefinition) {
         walk_type_definition(self, context, type_definition);
     }
-    fn visit_type_extension(&mut self, context: &mut C, type_extension: &'ast TypeExtension) {
+    fn visit_type_extension(&mut self, context: &C, type_extension: &'ast TypeExtension) {
         walk_type_extension(self, context, type_extension);
     }
-    fn visit_type_kind(&mut self, context: &mut C, type_kind: &'ast TypeKind) {
+    fn visit_type_kind(&mut self, context: &C, type_kind: &'ast TypeKind) {
         walk_type_kind(self, context, type_kind);
     }
     fn visit_type_system_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_definition: &'ast TypeSystemDefinition,
     ) {
         walk_type_system_definition(self, context, type_system_definition);
     }
     fn visit_type_system_definition_or_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_definition_or_extension: &'ast TypeSystemDefinitionOrExtension,
     ) {
         walk_type_system_definition_or_extension(
@@ -272,62 +271,62 @@ pub trait Visitor<'ast, C: Context>: Sized {
     }
     fn visit_type_system_directive_location(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_directive_location: &'ast TypeSystemDirectiveLocation,
     ) {
         walk_type_system_directive_location(self, context, type_system_directive_location);
     }
     fn visit_type_system_directive_location_kind(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_directive_location_kind: &'ast TypeSystemDirectiveLocationKind,
     ) {
         //
     }
     fn visit_type_system_document(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_document: &'ast TypeSystemDocument,
     ) {
         walk_type_system_document(self, context, type_system_document);
     }
     fn visit_type_system_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_extension: &'ast TypeSystemExtension,
     ) {
         walk_type_system_extension(self, context, type_system_extension);
     }
     fn visit_type_system_extension_document(
         &mut self,
-        context: &mut C,
+        context: &C,
         type_system_extension_document: &'ast TypeSystemExtensionDocument,
     ) {
         walk_type_system_extension_document(self, context, type_system_extension_document);
     }
     fn visit_union_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         union_type_definition: &'ast UnionTypeDefinition,
     ) {
         walk_union_type_definition(self, context, union_type_definition);
     }
     fn visit_union_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         union_type_extension: &'ast UnionTypeExtension,
     ) {
         walk_union_type_extension(self, context, union_type_extension);
     }
-    fn visit_value(&mut self, context: &mut C, value: &'ast Value) {
+    fn visit_value(&mut self, context: &C, value: &'ast Value) {
         walk_value(self, context, value);
     }
-    fn visit_variable(&mut self, context: &mut C, variable: &'ast Variable) {
+    fn visit_variable(&mut self, context: &C, variable: &'ast Variable) {
         walk_variable(self, context, variable);
     }
     fn visit_variable_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         variable_definition: &'ast VariableDefinition,
     ) {
         walk_variable_definition(self, context, variable_definition);
@@ -336,7 +335,7 @@ pub trait Visitor<'ast, C: Context>: Sized {
 
 pub fn walk_argument<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     argument: &'a Argument,
 ) {
     visitor.visit_name(context, &argument.key);
@@ -345,7 +344,7 @@ pub fn walk_argument<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     definition: &'a Definition,
 ) {
     match definition {
@@ -366,7 +365,7 @@ pub fn walk_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_directive<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     directive: &'a Directive,
 ) {
     visitor.visit_name(context, &directive.name);
@@ -377,7 +376,7 @@ pub fn walk_directive<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_directive_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     directive_definition: &'a DirectiveDefinition,
 ) {
     if let Some(ref description) = directive_definition.description {
@@ -394,7 +393,7 @@ pub fn walk_directive_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_directive_location<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     directive_location: &'a DirectiveLocation,
 ) {
     match directive_location {
@@ -409,7 +408,7 @@ pub fn walk_directive_location<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_document<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     document: &'a Document,
 ) {
     for definition in document.definitions.iter() {
@@ -419,7 +418,7 @@ pub fn walk_document<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_enum_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     enum_type_definition: &'a EnumTypeDefinition,
 ) {
     if let Some(ref description) = enum_type_definition.description {
@@ -436,7 +435,7 @@ pub fn walk_enum_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_enum_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     enum_type_extension: &'a EnumTypeExtension,
 ) {
     visitor.visit_name(context, &enum_type_extension.name);
@@ -450,7 +449,7 @@ pub fn walk_enum_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_enum_value<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     enum_value: &'a EnumValue,
 ) {
     visitor.visit_name(context, &enum_value.name);
@@ -458,7 +457,7 @@ pub fn walk_enum_value<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_enum_value_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     enum_value_definition: &'a EnumValueDefinition,
 ) {
     if let Some(ref description) = enum_value_definition.description {
@@ -472,7 +471,7 @@ pub fn walk_enum_value_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_executable_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     executable_definition: &'a ExecutableDefinition,
 ) {
     match executable_definition {
@@ -487,7 +486,7 @@ pub fn walk_executable_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_executable_directive_location<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     executable_directive_location: &'a ExecutableDirectiveLocation,
 ) {
     visitor.visit_executable_directive_location_kind(context, &executable_directive_location.kind);
@@ -495,7 +494,7 @@ pub fn walk_executable_directive_location<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_executable_document<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     executable_document: &'a ExecutableDocument,
 ) {
     for definition in executable_document.definitions.iter() {
@@ -505,7 +504,7 @@ pub fn walk_executable_document<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_field<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     field: &'a Field,
 ) {
     if let Some(ref alias) = field.alias {
@@ -525,7 +524,7 @@ pub fn walk_field<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_field_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     field_definition: &'a FieldDefinition,
 ) {
     if let Some(ref description) = field_definition.description {
@@ -543,7 +542,7 @@ pub fn walk_field_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_fragment_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     fragment_definition: &'a FragmentDefinition,
 ) {
     visitor.visit_name(context, &fragment_definition.name);
@@ -558,7 +557,7 @@ pub fn walk_fragment_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_fragment_spread<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     fragment_spread: &'a FragmentSpread,
 ) {
     visitor.visit_name(context, &fragment_spread.name);
@@ -569,7 +568,7 @@ pub fn walk_fragment_spread<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_inline_fragment<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     inline_fragment: &'a InlineFragment,
 ) {
     visitor.visit_name(context, &inline_fragment.name);
@@ -583,7 +582,7 @@ pub fn walk_inline_fragment<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_input_object_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     input_object_type_definition: &'a InputObjectTypeDefinition,
 ) {
     if let Some(ref description) = input_object_type_definition.description {
@@ -600,7 +599,7 @@ pub fn walk_input_object_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_input_object_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     input_object_type_extension: &'a InputObjectTypeExtension,
 ) {
     visitor.visit_name(context, &input_object_type_extension.name);
@@ -614,7 +613,7 @@ pub fn walk_input_object_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_input_value_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     input_value_definition: &'a InputValueDefinition,
 ) {
     if let Some(ref description) = input_value_definition.description {
@@ -632,7 +631,7 @@ pub fn walk_input_value_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_interface_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     interface_type_definition: &'a InterfaceTypeDefinition,
 ) {
     if let Some(ref description) = interface_type_definition.description {
@@ -652,7 +651,7 @@ pub fn walk_interface_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_interface_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     interface_type_extension: &'a InterfaceTypeExtension,
 ) {
     visitor.visit_name(context, &interface_type_extension.name);
@@ -669,7 +668,7 @@ pub fn walk_interface_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_list_value<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     list_value: &'a ListValue,
 ) {
     for value in list_value.values.iter() {
@@ -679,7 +678,7 @@ pub fn walk_list_value<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_object_field<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     object_field: &'a ObjectField,
 ) {
     visitor.visit_name(context, &object_field.key);
@@ -688,7 +687,7 @@ pub fn walk_object_field<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_object_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     object_type_definition: &'a ObjectTypeDefinition,
 ) {
     visitor.visit_name(context, &object_type_definition.name);
@@ -705,7 +704,7 @@ pub fn walk_object_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_object_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     object_type_extension: &'a ObjectTypeExtension,
 ) {
     visitor.visit_name(context, &object_type_extension.name);
@@ -722,7 +721,7 @@ pub fn walk_object_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_object_value<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     object_value: &'a ObjectValue,
 ) {
     for field in object_value.fields.iter() {
@@ -732,10 +731,10 @@ pub fn walk_object_value<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_operation_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     operation_definition: &'a OperationDefinition,
 ) {
-    visitor.visit_operation_type(context, &operation_definition.operation_type);
+    visitor.visit_operation_type(context, &operation_definition.operation);
     if let Some(ref name) = operation_definition.name {
         visitor.visit_name(context, name);
     }
@@ -752,7 +751,7 @@ pub fn walk_operation_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_root_operation_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     root_operation_type_definition: &'a RootOperationTypeDefinition,
 ) {
     visitor.visit_operation_type(context, &root_operation_type_definition.key);
@@ -761,7 +760,7 @@ pub fn walk_root_operation_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_scalar_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     scalar_type_definition: &'a ScalarTypeDefinition,
 ) {
     if let Some(ref description) = scalar_type_definition.description {
@@ -775,7 +774,7 @@ pub fn walk_scalar_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_scalar_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     scalar_type_extension: &'a ScalarTypeExtension,
 ) {
     visitor.visit_name(context, &scalar_type_extension.name);
@@ -786,7 +785,7 @@ pub fn walk_scalar_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_schema_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     schema_definition: &'a SchemaDefinition,
 ) {
     if let Some(ref description) = schema_definition.description {
@@ -802,7 +801,7 @@ pub fn walk_schema_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_schema_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     schema_extension: &'a SchemaExtension,
 ) {
     for directive in schema_extension.directives.iter() {
@@ -815,7 +814,7 @@ pub fn walk_schema_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_selection<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     selection: &'a Selection,
 ) {
     match selection {
@@ -829,13 +828,13 @@ pub fn walk_selection<'a, C: Context, V: Visitor<'a, C>>(
     }
 }
 
-pub fn walk_ty<'a, C: Context, V: Visitor<'a, C>>(visitor: &mut V, context: &mut C, ty: &'a Type) {
+pub fn walk_ty<'a, C: Context, V: Visitor<'a, C>>(visitor: &mut V, context: &C, ty: &'a Type) {
     visitor.visit_type_kind(context, &ty.kind);
 }
 
 pub fn walk_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_definition: &'a TypeDefinition,
 ) {
     match type_definition {
@@ -860,7 +859,7 @@ pub fn walk_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_extension: &'a TypeExtension,
 ) {
     match type_extension {
@@ -879,7 +878,7 @@ pub fn walk_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_kind<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_kind: &'a TypeKind,
 ) {
     match type_kind {
@@ -891,7 +890,7 @@ pub fn walk_type_kind<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_system_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_definition: &'a TypeSystemDefinition,
 ) {
     match type_system_definition {
@@ -909,7 +908,7 @@ pub fn walk_type_system_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_system_definition_or_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_definition_or_extension: &'a TypeSystemDefinitionOrExtension,
 ) {
     match type_system_definition_or_extension {
@@ -924,7 +923,7 @@ pub fn walk_type_system_definition_or_extension<'a, C: Context, V: Visitor<'a, C
 
 pub fn walk_type_system_directive_location<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_directive_location: &'a TypeSystemDirectiveLocation,
 ) {
     visitor
@@ -933,7 +932,7 @@ pub fn walk_type_system_directive_location<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_system_document<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_document: &'a TypeSystemDocument,
 ) {
     for definition in type_system_document.definitions.iter() {
@@ -943,7 +942,7 @@ pub fn walk_type_system_document<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_system_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_extension: &'a TypeSystemExtension,
 ) {
     match type_system_extension {
@@ -958,7 +957,7 @@ pub fn walk_type_system_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_type_system_extension_document<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     type_system_extension_document: &'a TypeSystemExtensionDocument,
 ) {
     for definition in type_system_extension_document.definitions.iter() {
@@ -968,7 +967,7 @@ pub fn walk_type_system_extension_document<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_union_type_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     union_type_definition: &'a UnionTypeDefinition,
 ) {
     if let Some(ref description) = union_type_definition.description {
@@ -985,7 +984,7 @@ pub fn walk_union_type_definition<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_union_type_extension<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     union_type_extension: &'a UnionTypeExtension,
 ) {
     visitor.visit_name(context, &union_type_extension.name);
@@ -999,7 +998,7 @@ pub fn walk_union_type_extension<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_value<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     value: &'a Value,
 ) {
     match value {
@@ -1017,7 +1016,7 @@ pub fn walk_value<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_variable<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     variable: &'a Variable,
 ) {
     visitor.visit_name(context, &variable.name);
@@ -1025,7 +1024,7 @@ pub fn walk_variable<'a, C: Context, V: Visitor<'a, C>>(
 
 pub fn walk_variable_definition<'a, C: Context, V: Visitor<'a, C>>(
     visitor: &mut V,
-    context: &mut C,
+    context: &C,
     variable_definition: &'a VariableDefinition,
 ) {
     visitor.visit_name(context, &variable_definition.name);

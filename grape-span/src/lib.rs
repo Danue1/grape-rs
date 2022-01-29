@@ -2,7 +2,7 @@
 
 pub const DUMMY_SPAN: Span = Span { start: 0, end: 0 };
 
-#[derive(Debug, PartialEq, PartialOrd, Eq, Ord, Clone, Copy, Hash)]
+#[derive(Debug, Default, PartialEq, PartialOrd, Eq, Ord, Clone, Copy, Hash)]
 pub struct Span {
     pub start: usize,
     pub end: usize,

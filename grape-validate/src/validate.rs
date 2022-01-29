@@ -1,4 +1,7 @@
-use crate::{ExecutableDefinitionsRule, LoneAnonymousOperationRule, OperationNameUniquenessRule};
+use crate::{
+    ExecutableDefinitionsRule, LoneAnonymousOperationRule, OperationNameUniquenessRule,
+    SingleRootField,
+};
 use grape_ast::{
     Context, Document, ExecutableDocument, TypeSystemDocument, TypeSystemExtensionDocument, Visitor,
 };
@@ -8,6 +11,7 @@ macro_rules! validate {
         ExecutableDefinitionsRule.$visit($context, &$document);
         LoneAnonymousOperationRule.$visit($context, &$document);
         OperationNameUniquenessRule::new().$visit($context, &$document);
+        SingleRootField::new().$visit($context, &$document);
     };
 }
 

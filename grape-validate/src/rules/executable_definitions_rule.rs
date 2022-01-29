@@ -13,7 +13,7 @@ pub struct ExecutableDefinitionsRule;
 impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
     fn visit_schema_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         _schema_definition: &'rule SchemaDefinition,
     ) {
         report(context, ReportKind::DefinitionName(SchemaDefinition::NAME));
@@ -21,7 +21,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_scalar_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         scalar_type_definition: &'rule ScalarTypeDefinition,
     ) {
         report(
@@ -32,7 +32,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_object_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         object_type_definition: &'rule ObjectTypeDefinition,
     ) {
         report(
@@ -43,7 +43,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_interface_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         interface_type_definition: &'rule InterfaceTypeDefinition,
     ) {
         report(
@@ -54,7 +54,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_union_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         union_type_definition: &'rule UnionTypeDefinition,
     ) {
         report(
@@ -65,7 +65,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_enum_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         enum_type_definition: &'rule EnumTypeDefinition,
     ) {
         report(
@@ -76,7 +76,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_input_object_type_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         input_object_type_definition: &'rule InputObjectTypeDefinition,
     ) {
         report(
@@ -87,7 +87,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_directive_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         directive_definition: &'rule DirectiveDefinition,
     ) {
         report(
@@ -96,17 +96,13 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
         );
     }
 
-    fn visit_schema_extension(
-        &mut self,
-        context: &mut C,
-        _schema_extension: &'rule SchemaExtension,
-    ) {
+    fn visit_schema_extension(&mut self, context: &C, _schema_extension: &'rule SchemaExtension) {
         report(context, ReportKind::ExtensionName(SchemaExtension::NAME));
     }
 
     fn visit_scalar_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         scalar_type_extension: &'rule ScalarTypeExtension,
     ) {
         report(
@@ -117,7 +113,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_object_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         object_type_extension: &'rule ObjectTypeExtension,
     ) {
         report(
@@ -128,7 +124,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_interface_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         interface_type_extension: &'rule InterfaceTypeExtension,
     ) {
         report(
@@ -139,7 +135,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_union_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         union_type_extension: &'rule UnionTypeExtension,
     ) {
         report(
@@ -150,7 +146,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_enum_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         enum_type_extension: &'rule EnumTypeExtension,
     ) {
         report(
@@ -161,7 +157,7 @@ impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
 
     fn visit_input_object_type_extension(
         &mut self,
-        context: &mut C,
+        context: &C,
         input_object_type_extension: &'rule InputObjectTypeExtension,
     ) {
         report(
@@ -178,12 +174,12 @@ enum ReportKind<'report> {
     ExtensionName(&'report str),
 }
 
-fn report<C: Context>(context: &mut C, kind: ReportKind) {
+fn report<C: Context>(context: &C, kind: ReportKind) {
     let message = match kind {
         ReportKind::DefinitionSpan(span) => {
             format!(
                 "The \"{}\" definition is not executable.",
-                context.span(span)
+                context.span(*span)
             )
         }
         ReportKind::DefinitionName(name) => {
@@ -192,7 +188,7 @@ fn report<C: Context>(context: &mut C, kind: ReportKind) {
         ReportKind::ExtensionSpan(span) => {
             format!(
                 "The \"{}\" extension is not executable.",
-                context.span(span)
+                context.span(*span)
             )
         }
         ReportKind::ExtensionName(name) => {

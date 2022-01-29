@@ -18,12 +18,12 @@ impl OperationNameUniquenessRule {
 impl<'rule, C: Context> Visitor<'rule, C> for OperationNameUniquenessRule {
     fn visit_operation_definition(
         &mut self,
-        context: &mut C,
+        context: &C,
         operation_definition: &'rule OperationDefinition,
     ) {
         if let Some(name) = &operation_definition.name {
             if self.names.contains(&name.symbol) {
-                let name = context.span(&name.span);
+                let name = context.span(name.span);
                 let message = MessageBuilder::error(format!(
                     "There can be only one operation named \"{}\".",
                     name

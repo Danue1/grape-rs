@@ -90,6 +90,13 @@ impl Value {
             Value::Object(value) => value.span,
         }
     }
+
+    pub const fn as_boolean(&self) -> Option<bool> {
+        match self {
+            Value::Boolean(value) => Some(value.value),
+            _ => None,
+        }
+    }
 }
 
 /// [Spec](https://spec.graphql.org/October2021/#Variable)
@@ -184,4 +191,12 @@ pub struct Directive {
     pub span: Span,
     pub name: Name,
     pub arguments: Vec<Argument>,
+}
+
+impl Directive {
+    pub fn argument(&self, key: &Symbol) -> Option<&Argument> {
+        self.arguments
+            .iter()
+            .find(|argument| &argument.key.symbol == key)
+    }
 }

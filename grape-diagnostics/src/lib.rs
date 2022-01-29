@@ -41,7 +41,7 @@ impl<'diagnostics> Diagnostics<'diagnostics> {
         self.messages.is_empty()
     }
 
-    pub fn span(&self, span: &Span) -> &'diagnostics str {
+    pub fn span(&self, span: Span) -> &'diagnostics str {
         &self.source[span.start..span.end]
     }
 
