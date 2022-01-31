@@ -1,8 +1,9 @@
 use grape_ast::{
-    Context, DirectiveDefinition, EnumTypeDefinition, EnumTypeExtension, InputObjectTypeDefinition,
-    InputObjectTypeExtension, InterfaceTypeDefinition, InterfaceTypeExtension,
-    ObjectTypeDefinition, ObjectTypeExtension, ScalarTypeDefinition, ScalarTypeExtension,
-    SchemaDefinition, SchemaExtension, UnionTypeDefinition, UnionTypeExtension, Visitor,
+    DirectiveDefinition, DocumentContext, DocumentVisitor, EnumTypeDefinition, EnumTypeExtension,
+    InputObjectTypeDefinition, InputObjectTypeExtension, InterfaceTypeDefinition,
+    InterfaceTypeExtension, ObjectTypeDefinition, ObjectTypeExtension, ScalarTypeDefinition,
+    ScalarTypeExtension, SchemaDefinition, SchemaExtension, UnionTypeDefinition,
+    UnionTypeExtension,
 };
 use grape_diagnostics::MessageBuilder;
 use grape_span::Span;
@@ -10,7 +11,7 @@ use grape_span::Span;
 /// [Spec](https://spec.graphql.org/draft/#sec-Executable-Definitions)
 pub struct ExecutableDefinitionsRule;
 
-impl<'rule, C: Context> Visitor<'rule, C> for ExecutableDefinitionsRule {
+impl<'rule, C: DocumentContext> DocumentVisitor<'rule, C> for ExecutableDefinitionsRule {
     fn visit_schema_definition(
         &mut self,
         context: &C,
@@ -174,7 +175,7 @@ enum ReportKind<'report> {
     ExtensionName(&'report str),
 }
 
-fn report<C: Context>(context: &C, kind: ReportKind) {
+fn report<C: DocumentContext>(context: &C, kind: ReportKind) {
     let message = match kind {
         ReportKind::DefinitionSpan(span) => {
             format!(

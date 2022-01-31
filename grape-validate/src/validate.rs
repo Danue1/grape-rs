@@ -3,7 +3,8 @@ use crate::{
     SingleRootField,
 };
 use grape_ast::{
-    Context, Document, ExecutableDocument, TypeSystemDocument, TypeSystemExtensionDocument, Visitor,
+    Document, DocumentContext, DocumentVisitor, ExecutableDocument, TypeSystemDocument,
+    TypeSystemExtensionDocument,
 };
 
 macro_rules! validate {
@@ -15,18 +16,18 @@ macro_rules! validate {
     };
 }
 
-pub fn validate_document<C: Context>(context: &mut C, document: &Document) {
+pub fn validate_document<C: DocumentContext>(context: &mut C, document: &Document) {
     validate!(visit_document(context, document));
 }
 
-pub fn validate_type_system_document<C: Context>(
+pub fn validate_type_system_document<C: DocumentContext>(
     context: &mut C,
     type_system_document: &TypeSystemDocument,
 ) {
     validate!(visit_type_system_document(context, type_system_document));
 }
 
-pub fn validate_type_system_extension_document<C: Context>(
+pub fn validate_type_system_extension_document<C: DocumentContext>(
     context: &mut C,
     type_system_extension_document: &TypeSystemExtensionDocument,
 ) {
@@ -36,7 +37,7 @@ pub fn validate_type_system_extension_document<C: Context>(
     ));
 }
 
-pub fn validate_executable_document<C: Context>(
+pub fn validate_executable_document<C: DocumentContext>(
     context: &mut C,
     executable_document: &ExecutableDocument,
 ) {

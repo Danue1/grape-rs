@@ -1,16 +1,15 @@
 #![warn(clippy::all)]
 
-use grape_ast::{Context, Definition, Document, FragmentDefinition, Value};
+use grape_ast::{Definition, Document, DocumentContext, FragmentDefinition, Value};
 use grape_diagnostics::{Diagnostics, Message};
 use grape_span::Span;
 use grape_symbol::Symbol;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::rc::Rc;
 
 #[derive(Debug)]
 pub struct ValidationContext<'rule> {
-    pub diagnostics: Rc<RefCell<Diagnostics<'rule>>>,
+    pub diagnostics: RefCell<Diagnostics<'rule>>,
     pub fragments: HashMap<Symbol, &'rule FragmentDefinition>,
     pub variables: &'rule HashMap<Symbol, Value>,
 }
@@ -21,7 +20,7 @@ impl<'rule> ValidationContext<'rule> {
         document: &'rule Document,
         variables: &'rule HashMap<Symbol, Value>,
     ) -> Self {
-        let diagnostics = Rc::new(RefCell::new(Diagnostics::new(source)));
+        let diagnostics = RefCell::new(Diagnostics::new(source));
         let fragments = document
             .definitions
             .iter()
@@ -39,7 +38,7 @@ impl<'rule> ValidationContext<'rule> {
     }
 }
 
-impl<'rule> Context for ValidationContext<'rule> {
+impl<'rule> DocumentContext for ValidationContext<'rule> {
     fn report(&self, message: Message) {
         self.diagnostics.borrow_mut().report(message);
     }

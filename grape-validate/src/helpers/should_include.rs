@@ -1,7 +1,7 @@
-use grape_ast::{BooleanValue, Context, Selection, Value, Variable};
+use grape_ast::{BooleanValue, DocumentContext, Selection, Value, Variable};
 use grape_symbol::{builtin_directive, IF};
 
-pub fn should_include<C: Context>(context: &C, selection: &Selection) -> bool {
+pub fn should_include<C: DocumentContext>(context: &C, selection: &Selection) -> bool {
     let directives = selection.directives();
     let mut include = true;
     for directive in directives {

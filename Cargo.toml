@@ -8,6 +8,7 @@ grape-ast = { path = "./grape-ast" }
 grape-diagnostics = { path = "./grape-diagnostics" }
 grape-lex = { path = "./grape-lex" }
 grape-parse = { path = "./grape-parse" }
+grape-schema = { path = "./grape-schema" }
 grape-span = { path = "./grape-span" }
 grape-symbol = { path = "./grape-symbol" }
 grape-token = { path = "./grape-token" }
@@ -19,6 +20,7 @@ members = [
   "grape-diagnostics",
   "grape-lex",
   "grape-parse",
+  "grape-schema",
   "grape-span",
   "grape-symbol",
   "grape-token",

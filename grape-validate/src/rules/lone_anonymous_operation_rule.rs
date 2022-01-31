@@ -1,13 +1,13 @@
 use grape_ast::{
-  Context, Definition, Document, ExecutableDefinition, ExecutableDocument, OperationDefinition,
-  Visitor,
+  Definition, Document, DocumentContext, DocumentVisitor, ExecutableDefinition, ExecutableDocument,
+  OperationDefinition,
 };
 use grape_diagnostics::MessageBuilder;
 
 /// [Spec](https://spec.graphql.org/draft/#sec-Lone-Anonymous-Operation)
 pub struct LoneAnonymousOperationRule;
 
-impl<'rule, C: Context> Visitor<'rule, C> for LoneAnonymousOperationRule {
+impl<'rule, C: DocumentContext> DocumentVisitor<'rule, C> for LoneAnonymousOperationRule {
   fn visit_document(&mut self, context: &C, document: &'rule Document) {
     let operation_count = document
       .definitions

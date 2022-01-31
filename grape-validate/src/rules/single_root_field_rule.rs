@@ -1,8 +1,8 @@
 use crate::should_include;
 use grape_ast::{
-    walk_selection, Context, Definition, Document, ExecutableDefinition, ExecutableDocument, Field,
-    FragmentSpread, InlineFragment, OperationDefinition, OperationType, Selection,
-    TypeSystemDocument, TypeSystemExtensionDocument, Visitor,
+    walk_selection, Definition, Document, DocumentContext, DocumentVisitor, ExecutableDefinition,
+    ExecutableDocument, Field, FragmentSpread, InlineFragment, OperationDefinition, OperationType,
+    Selection, TypeSystemDocument, TypeSystemExtensionDocument,
 };
 use grape_diagnostics::MessageBuilder;
 use grape_symbol::Symbol;
@@ -23,7 +23,7 @@ impl SingleRootField {
     }
 }
 
-impl<C: Context> Visitor<'_, C> for SingleRootField {
+impl<C: DocumentContext> DocumentVisitor<'_, C> for SingleRootField {
     fn visit_document(&mut self, context: &C, document: &Document) {
         for definition in &document.definitions {
             if let Definition::Operation(operation) = definition {

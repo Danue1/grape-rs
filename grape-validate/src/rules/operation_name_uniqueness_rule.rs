@@ -1,4 +1,4 @@
-use grape_ast::{Context, OperationDefinition, Visitor};
+use grape_ast::{DocumentContext, DocumentVisitor, OperationDefinition};
 use grape_diagnostics::MessageBuilder;
 use grape_symbol::Symbol;
 use std::collections::HashSet;
@@ -15,7 +15,7 @@ impl OperationNameUniquenessRule {
     }
 }
 
-impl<'rule, C: Context> Visitor<'rule, C> for OperationNameUniquenessRule {
+impl<'rule, C: DocumentContext> DocumentVisitor<'rule, C> for OperationNameUniquenessRule {
     fn visit_operation_definition(
         &mut self,
         context: &C,
